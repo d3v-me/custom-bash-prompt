@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Define the .bash_prompt content
-BASH_PROMPT_CONTENT='
+# Define the .bash_prompt content using EOF to avoid interpretation of special characters
+BASH_PROMPT_CONTENT=$(cat <<'EOF'
 # Define some basic colors using tput (8-bit color: 256 colors)
 red="\[$(tput setaf 160)\]"
 bright_red="\[$(tput setaf 196)\]"
@@ -39,16 +39,25 @@ PS1+="${etc_color}]\n└──╼ "; # \n=New Line
 PS1+="${symbol}${reset}";
 
 export PS1
-'
+EOF
+)
+
+# Define the code to source .bash_prompt in .bashrc
+BASHRC_SOURCE_CODE=$(cat <<'EOF'
+# Use custom bash prompt (will execute .bash_prompt script)
+if [ -f ~/.bash_prompt ]; then
+  . ~/.bash_prompt
+fi
+EOF
+)
 
 # Create the .bash_prompt file in the user's home directory
 echo "$BASH_PROMPT_CONTENT" > ~/.bash_prompt
 echo ".bash_prompt created in the home directory."
 
 # Check if .bashrc already sources .bash_prompt, and add it if not
-if ! grep -q "if [ -f ~/.bash_prompt ]; then . ~/.bash_prompt; fi" ~/.bashrc; then
-  echo -e "\n# Use custom bash prompt (will execute .bash_prompt script)" >> ~/.bashrc
-  echo "if [ -f ~/.bash_prompt ]; then . ~/.bash_prompt; fi" >> ~/.bashrc
+if ! grep -q 'if [ -f ~/.bash_prompt ]; then . ~/.bash_prompt; fi' ~/.bashrc; then
+  echo "$BASHRC_SOURCE_CODE" >> ~/.bashrc
   echo ".bash_prompt source line added to .bashrc."
 else
   echo ".bash_prompt is already sourced in .bashrc."
