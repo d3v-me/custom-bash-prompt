@@ -29,8 +29,12 @@ This project provides a script to install a custom Bash prompt on Debian-based s
     ```bash
     ./install_prompt.sh
     ```
+   **Run with sudo to have the modification with /root**:
+    ```bash
+    sudo ./install_prompt.sh
+    ```
 
-4. **Open a New Terminal**: The custom Bash prompt will be active in any new terminal session.
+5. **Open a New Terminal**: The custom Bash prompt will be active in any new terminal session.
 
 ## How It Works
 
